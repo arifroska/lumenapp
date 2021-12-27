@@ -3,44 +3,48 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Hash;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
     public function login(Request $request)
     {
-        $this->validate($request, [
-            'email' => 'required|email',
-            'password' => 'required|min:6'
-        ]);
-
-        $email = $request->input('email');
-        $password = $request->input('password');
-
-        $user = User::where('email', $email)->first();
-        if (!$user) {
-            return response()->json(['message' => 'Login failed'], 401);
+        $username = $request->username;
+        $password = $request->password;
+        
+        $user = User::where('username', $username)->first();
+        if (!$user || !Hash::check($password, $user->password)) {
+            return response()->json(['message' => 'Username/Password salah'], 401);
         }
 
-        $isValidPassword = Hash::check($password, $user->password);
-        if (!$isValidPassword) {
-            return response()->json(['message' => 'Login failed'], 401);
-        }
-
-        $generateToken = bin2hex(random_bytes(40));
         $user->update([
-            'token' => $generateToken
+            'token' => bin2hex(random_bytes(40))
         ]);
 
         return response()->json($user);
     }
 
     public function logout(Request $request){
+        
         $user = \Auth::user();
         $user->token = null;
         $user->save();
 
         return response()->json(['message' => 'Pengguna telah logout']);
     }
+
+    public function register(Request $request){
+        $username = $request->username;
+        $password = Hash::make($request->password);
+    
+        User::create([
+            'username' => $username,
+            'password' => $password
+        ]);
+
+        return response()->json(['message' => 'pendaftaran berhasil']);
+    }
+
 }

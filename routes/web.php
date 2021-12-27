@@ -22,7 +22,7 @@ $router->get('/data', function () use ($router) {
     return response()->json($results);
 });
 
-$router->post('/register', 'UserController@register');
+$router->post('/register', 'AuthController@register');
 $router->post('/login','AuthController@login');
 
 
