@@ -41,7 +41,9 @@ class AuthController extends Controller
     
         User::create([
             'username' => $username,
-            'password' => $password
+            'password' => $password,
+            'email' => $email,
+            'no_hp' => $no_hp
         ]);
 
         return response()->json(['message' => 'pendaftaran berhasil']);
