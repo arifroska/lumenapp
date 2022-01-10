@@ -40,12 +40,14 @@ class AuthController extends Controller
         $password = Hash::make($request->password);
         $email = $request->email;
         $no_hp = $request->no_hp;
+        $nama = $request->nama;
     
         User::create([
             'username' => $username,
             'password' => $password,
             'email' => $email,
-            'no_hp' => $no_hp
+            'no_hp' => $no_hp,
+            'nama' => $nama
         ]);
 
         return response()->json(['message' => 'pendaftaran berhasil']);
