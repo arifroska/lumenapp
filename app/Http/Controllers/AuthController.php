@@ -28,9 +28,9 @@ class AuthController extends Controller
 
     public function logout(Request $request){
         
-        $user = \Auth::user();
-        $user->token = null;
-        $user->save();
+        User::whereToken(auth()->guard('api')->user()->token)->update([
+            'token' => null
+        ]);
 
         return response()->json(['message' => 'Pengguna telah logout']);
     }
