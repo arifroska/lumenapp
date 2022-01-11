@@ -53,4 +53,30 @@ class AuthController extends Controller
         return response()->json(['message' => 'pendaftaran berhasil']);
     }
 
+    public function gantipassword(Request $request){
+        User::whereToken(auth()->guard('api')->user()->token)->update([
+            'password' => Hash::make(htmlspecialchars($request->password))
+        ]);
+
+        return response()->json(['message' => 'Password berhasil diubah']);
+    }
+
+    public function pesangedung(Request $request){
+        $gedung = $request->gedung;
+        $ruangan = $request->ruangan;
+        $tanggal = $request->tanggal;
+        $waktu = $request->waktu;
+        $keterangan = $request->keterangan;
+    
+        User::create([
+            'gedung' => $gedung,
+            'ruangan' => $ruangan,
+            'tanggal' => $tanggal,
+            'waktu' => $waktu,
+            'keterangan' => $keterangan
+        ]);
+
+        return response()->json(['message' => 'Data disimpan']);
+    }
+
 }
